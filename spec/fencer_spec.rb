@@ -11,7 +11,7 @@ describe Fencer do
     string :name, 20
     string :department, 20
     space 2
-    string :employment_date, 8, -> s { dasherise_ymd(str) }
+    field :employment_date, 8, -> s { dasherise_ymd(str) }
     integer :id_number, 6
     decimal :leave_accrued, 11
 
@@ -71,7 +71,13 @@ describe Fencer do
 end
 
 
-class FencerBaseTest < Fencer::Base; end
+class FencerBaseTest < Fencer::Base
+  class << self      
+    def reset_fields!
+      @fields = {}
+    end
+  end
+end
 
 describe Fencer::Base do
   before(:each) do
