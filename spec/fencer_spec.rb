@@ -11,12 +11,14 @@ describe Fencer do
     string :name, 20
     string :department, 20
     space 2
-    field :employment_date, 8, -> s { dasherise_ymd(str) }
+    field :employment_date, 8, -> s { dasherise_ymd(s) }
     integer :id_number, 6
     decimal :leave_accrued, 11
 
-    def dasherise_ymd(str)
-      s.gsub(/([0-9]{4})([0-9]{2})([0-9]{2})/) { "#{$1}-#{$2}-#{$3}" }
+    class << self
+      def dasherise_ymd(str)
+        str.gsub(/([0-9]{4})([0-9]{2})([0-9]{2})/) { "#{$1}-#{$2}-#{$3}" }
+      end
     end
   end
 
@@ -43,7 +45,7 @@ describe Fencer do
     values.department.should eq(department)
     values.employment_date.should eq("2012-05-25")
     values.id_number.should eq(id_number.to_i)
-    leave_accrued.should eq(BigDecimal(leave_accrued))
+    values.leave_accrued.should eq(BigDecimal(leave_accrued))
 
     # export our values to a hash
     values.to_hash.should eq({
@@ -66,7 +68,7 @@ describe Fencer do
     values.department.should eq(department)
     values.employment_date.should eq("2012-05-25")
     values.id_number.should eq(id_number.to_i)
-    leave_accrued.should eq(BigDecimal(leave_accrued))    
+    values.leave_accrued.should eq(BigDecimal(leave_accrued))    
   end
 end
 
