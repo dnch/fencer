@@ -2,12 +2,7 @@ require "bigdecimal"
 require "fencer/version"
 
 module Fencer
-
-  class DuplicateFieldNameError < StandardError; end
-
-
-  # All instances of Fencer inherit from Base, emulating that much-loved,
-  # inspiration, ActiveRecord.
+  
   class Base
     Converters = {
       string:  -> s { s.strip },
@@ -15,16 +10,13 @@ module Fencer
       decimal: -> s { BigDecimal(s) },
     }
 
-    # All the complex functionality 
     class << self
       attr_reader :fields
       
-      # Pure, unadulterated magic.
       def inherited(subclass)      
         subclass.instance_variable_set(:@fields, {})
       end
       
-      #
       def field(name, size, convert = nil)
         # error handling, ahoy!
         raise "#{name} already defined as a field on #{self.name}" if fields.has_key?(name)
@@ -39,7 +31,6 @@ module Fencer
         define_method(name) { @values[name] }        
       end
       
-      # Add a space
       def space(size)
         fields[:"_#{fields.length.succ}"] = { size: size, space: true }
       end
@@ -57,8 +48,6 @@ module Fencer
       end      
     end
     
-    
-    # Parsing is done as part of initialisation
     def initialize(str, delimiter = nil)
       @values    = {}
       @delimiter = delimiter
@@ -77,18 +66,13 @@ module Fencer
       if @delimiter
         raw_values = @str.split(@delimiter)
       else
-        # take our array of sizes, unpack them...
         unpack_phrase = self.class.fields.values.map { |s| "A#{s[:size]}" }.join
         raw_values = @str.unpack(unpack_phrase)
       end
 
-      # manual index because we do some funky shiz
-      _index = 0
-      
-      self.class.fields.each do |name, opts|
-        
-        unless opts[:space]
-          
+      _index = 0      
+      self.class.fields.each do |name, opts|        
+        unless opts[:space]          
           _conversion_proc = case opts[:convert]
             when Symbol then Converters[opts[:convert]]
             when Proc   then opts[:convert]
