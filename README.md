@@ -60,7 +60,7 @@ without any change of layout:
 ## Known Deficiencies
 
 Currently, Fencer works with Ruby 1.9 only. Sorry. I wanted Hashes that
-preserve field-order. P;us, the newer syntax is pretty.
+preserve field-order. Plus, the newer syntax is pretty.
 
 Fencer is also blissfully unaware of any sort of encoding. This is a planned  
 feature for the 1.0 release.
