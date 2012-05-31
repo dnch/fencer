@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
                        text-based records simpler by providing a flexible DSL
                        for defining field lengths and transformations}
 
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/undumb/fencer"
   gem.files         = `git ls-files`.split($\) - %w(Gemfile .gitignore)
   # gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
