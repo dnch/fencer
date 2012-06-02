@@ -18,16 +18,16 @@ provided.
 converter.
 
 ## Field Conversion
-`Fencer::Base::Converters` is a `Hash<` defines some commonly-used converters. 
-It's left un-frozen, so it can be extended as required.
+`Fencer::Base::Converters` is a `Hash` that defines some commonly-used 
+converters. It's left un-frozen, so it can be extended as required.
 
 Short-cut methods for the default field types are also available:
 
-   class EmployeeRecord < Fencer::Base
-     string  :department, 20      => String
-     integer :age, 2              => Integer
-     decimal :salary, 10          => BigDecimal
-   end
+    class EmployeeRecord < Fencer::Base
+      string  :department, 20      => String
+      integer :age, 2              => Integer
+      decimal :salary, 10          => BigDecimal
+    end
 
 Additionally, custom conversions can be defined by passing a `lambda`
 as the final argument.
