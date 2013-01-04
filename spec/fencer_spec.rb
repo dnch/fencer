@@ -68,7 +68,21 @@ describe Fencer do
     values.department.should eq(department)
     values.employment_date.should eq("2012-05-25")
     values.id_number.should eq(id_number.to_i)
-    values.leave_accrued.should eq(BigDecimal(leave_accrued))    
+    values.leave_accrued.should eq(BigDecimal(leave_accrued))
+  end
+
+  it "also describes arrays!" do
+    compiled_record = [
+      name, department, employment_date, id_number, leave_accrued
+    ]
+
+    values = EmployeeRecord.new(compiled_record)
+
+    values.name.should eq(name)
+    values.department.should eq(department)
+    values.employment_date.should eq("2012-05-25")
+    values.id_number.should eq(id_number.to_i)
+    values.leave_accrued.should eq(BigDecimal(leave_accrued))
   end
 end
 

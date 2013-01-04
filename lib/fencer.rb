@@ -61,9 +61,11 @@ module Fencer
     end
     
     private
-    
-    def parse!      
-      if @delimiter
+
+    def parse!
+      if @str.kind_of?(Array)
+        raw_values = @str
+      elsif @delimiter
         raw_values = @str.split(@delimiter)
       else
         unpack_phrase = self.class.fields.values.map { |s| "A#{s[:size]}" }.join
@@ -81,9 +83,9 @@ module Fencer
           
           @values[name] = _conversion_proc ? _conversion_proc.call(raw_values[_index]) : raw_values[_index]
         end
-        
-        _index += 1 unless opts[:space] && @delimiter
-      end      
-    end    
+
+        _index += 1 unless opts[:space] && (@delimiter || @str.kind_of?(Array))
+      end
+    end
   end
 end
