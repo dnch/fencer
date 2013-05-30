@@ -2,7 +2,6 @@ require "bigdecimal"
 require "fencer/version"
 
 module Fencer
-  
   class Base
     Converters = {
       string:  -> s { s.strip },
@@ -12,29 +11,29 @@ module Fencer
 
     class << self
       attr_reader :fields
-      
-      def inherited(subclass)      
+
+      def inherited(subclass)
         subclass.instance_variable_set(:@fields, {})
       end
-      
+
       def field(name, size, convert = nil)
         # error handling, ahoy!
         raise "#{name} already defined as a field on #{self.name}" if fields.has_key?(name)
-        
+
         unless convert.nil? || Converters.has_key?(convert) || convert.is_a?(Proc)
           raise "Invalid converter"
         end
 
         fields[name] = { size: size, convert: convert }
-        
+
         # create our attr method
-        define_method(name) { @values[name] }        
+        define_method(name) { @values[name] }
       end
-      
+
       def space(size)
         fields[:"_#{fields.length.succ}"] = { size: size, space: true }
       end
-      
+
       def string(name, size)
         field(name, size, :string)
       end
@@ -42,49 +41,49 @@ module Fencer
       def integer(name, size)
         field(name, size, :integer)
       end
-      
+
       def decimal(name, size)
         field(name, size, :decimal)
-      end      
+      end
     end
-    
-    def initialize(str, delimiter = nil)
+
+    def initialize(raw_data, delimiter = nil)
       @values    = {}
       @delimiter = delimiter
-      @str       = str
+      @raw_data  = raw_data
 
       parse!
     end
-    
+
     def to_hash
       @values
     end
-    
+
     private
 
     def parse!
-      if @str.kind_of?(Array)
-        raw_values = @str
+      if @raw_data.kind_of?(Array)
+        raw_values = @raw_data
       elsif @delimiter
-        raw_values = @str.split(@delimiter)
+        raw_values = @raw_data.split(@delimiter)
       else
         unpack_phrase = self.class.fields.values.map { |s| "A#{s[:size]}" }.join
-        raw_values = @str.unpack(unpack_phrase)
+        raw_values = @raw_data.unpack(unpack_phrase)
       end
 
-      _index = 0      
-      self.class.fields.each do |name, opts|        
-        unless opts[:space]          
-          _conversion_proc = case opts[:convert]
+      field_index = 0
+      self.class.fields.each do |name, opts|
+        unless opts[:space]
+          converter = case opts[:convert]
             when Symbol then Converters[opts[:convert]]
             when Proc   then opts[:convert]
             else nil
-          end 
-          
-          @values[name] = _conversion_proc ? _conversion_proc.call(raw_values[_index]) : raw_values[_index]
+          end
+
+          @values[name] = converter ? converter.call(raw_values[field_index]) : raw_values[field_index]
         end
 
-        _index += 1 unless opts[:space] && (@delimiter || @str.kind_of?(Array))
+        field_index += 1 unless opts[:space] && (@delimiter || @raw_data.kind_of?(Array))
       end
     end
   end
