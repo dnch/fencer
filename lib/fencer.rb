@@ -47,15 +47,10 @@ module Fencer
       end
     end
 
-    def initialize(raw_data, delimiter = nil, forced_encoding = nil)
-      @values          = {}
-      @delimiter       = delimiter
-
-      if forced_encoding
-        @raw_data = raw_data.encode(forced_encoding, invalid: :replace)
-      else
-        @raw_data = raw_data
-      end
+    def initialize(raw_data, delimiter = nil)
+      @values    = {}
+      @delimiter = delimiter
+      @raw_data  = raw_data
 
       parse!
     end
