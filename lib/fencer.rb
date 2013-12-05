@@ -6,7 +6,7 @@ module Fencer
     Converters = {
       string:  -> s { s.to_s.strip },
       integer: -> s { s.to_i },
-      decimal: -> s { BigDecimal(s) },
+      decimal: -> s { s.nil? ? nil : BigDecimal(s) },
     }
 
     class << self
