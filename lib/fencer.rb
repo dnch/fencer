@@ -4,9 +4,9 @@ require "fencer/version"
 module Fencer
   class Base
     Converters = {
-      string:  -> s { s.strip },
+      string:  -> s { s.to_s.strip },
       integer: -> s { s.to_i },
-      decimal: -> s { BigDecimal(s) },
+      decimal: -> s { s.nil? ? nil : BigDecimal(s) },
     }
 
     class << self
